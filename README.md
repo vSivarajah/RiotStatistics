@@ -5,7 +5,7 @@
 1. Install Go
 2. Download all dependencies for the project
 ````
-go get -u -v -f all
+go get -u
 ````
 
 3. Start the http server
