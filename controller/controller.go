@@ -4,11 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/vsivarajah/RiotStatistics/champions"
 	"github.com/vsivarajah/RiotStatistics/matches"
 	"github.com/vsivarajah/RiotStatistics/summoner"
 )
-
-var apiKey = "RGAPI-404efd6b-e0a6-4194-bd44-7feb43a7efc0"
 
 func GetSummoner(c *gin.Context) {
 	summonerName := c.Param("name")
@@ -24,4 +23,10 @@ func GetSummonerMatches(c *gin.Context) {
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.JSON(http.StatusOK, summonerMatches)
 
+}
+
+func GetChampions(c *gin.Context) {
+	champions := champions.GetChampions()
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.JSON(http.StatusOK, champions)
 }

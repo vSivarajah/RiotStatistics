@@ -10,7 +10,7 @@ import (
 	"github.com/vsivarajah/RiotStatistics/summoner"
 )
 
-var ApiKey string = "RGAPI-730fd948-b874-4070-ba8b-82f5bbad6cf6"
+var ApiKey string = "RGAPI-5b54bd59-38a4-458f-ae74-691dc3cc5e61"
 
 type Matches struct {
 	Totalgames int     `json:"totalgames"`
