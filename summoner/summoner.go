@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-var ApiKey = "RGAPI-edb214dd-22fb-40c7-ad1c-8f01d4c8d158"
+var ApiKey = ""
 
 type Summoner struct {
 	Id           string `json:"id"`
