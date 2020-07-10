@@ -2,6 +2,7 @@ package summoner
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -10,6 +11,15 @@ import (
 
 var ApiKey = ""
 
+type errorResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+type successResponse struct {
+	Code int         `json:"code"`
+	Data interface{} `json:"data"`
+}
 type Summoner struct {
 	Id           string `json:"id"`
 	SummonerName string `json:"name"`
@@ -51,6 +61,15 @@ func GetSummoner(summonerName string) (Summoner, error) {
 	defer resp.Body.Close()
 	summonerDetails := Summoner{}
 
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest {
+		var errRes errorResponse
+		if err = json.NewDecoder(resp.Body).Decode(&errRes); err == nil {
+			log.Println(err)
+			return summonerDetails, errors.New(errRes.Message)
+
+		}
+		return summonerDetails, fmt.Errorf("unknown error, status code: %d", resp.StatusCode)
+	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		panic(err)
@@ -75,6 +94,16 @@ func GetSummonerDetails(summonerName string) (SummonerProfileDetails, error) {
 
 	defer resp.Body.Close()
 	summonerProfile := SummonerProfileDetails{}
+
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest {
+		var errRes errorResponse
+		if err = json.NewDecoder(resp.Body).Decode(&errRes); err == nil {
+			return summonerProfile, errors.New(errRes.Message)
+
+		}
+		return summonerProfile, fmt.Errorf("unknown error, status code: %d", resp.StatusCode)
+
+	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
