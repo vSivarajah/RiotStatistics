@@ -33,7 +33,7 @@ type Match struct {
 type MatchList []*Match
 
 func GetMatches(summonerName string) Matches {
-	summoner := summoner.GetSummoner(summonerName)
+	summoner, _ := summoner.GetSummoner(summonerName)
 	url := fmt.Sprintf("https://euw1.api.riotgames.com/lol/match/v4/matchlists/by-account/%s?api_key=%s", summoner.AccountId, ApiKey)
 	resp, err := http.Get(url)
 	if err != nil {

@@ -6,12 +6,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vsivarajah/RiotStatistics/champions"
 	"github.com/vsivarajah/RiotStatistics/matches"
+	"github.com/vsivarajah/RiotStatistics/rest_errors"
 	"github.com/vsivarajah/RiotStatistics/summoner"
 )
 
 func GetSummoner(c *gin.Context) {
 	summonerName := c.Param("name")
-	summonerProfile := summoner.GetSummonerDetails(summonerName)
+	summonerProfile, err := summoner.GetSummonerDetails(summonerName)
+	if err != nil {
+		restErr := rest_errors.NewBadRequestError("invalid json body")
+		c.JSON(restErr.Status(), restErr)
+		return
+	}
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.JSON(http.StatusOK, summonerProfile)
 

@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-var ApiKey = ""
+var ApiKey = "RGAPI-edb214dd-22fb-40c7-ad1c-8f01d4c8d158"
 
 type Summoner struct {
 	Id           string `json:"id"`
@@ -40,7 +40,7 @@ type SummonerProfile struct {
 
 type SummonerProfileDetails []*SummonerProfile
 
-func GetSummoner(summonerName string) Summoner {
+func GetSummoner(summonerName string) (Summoner, error) {
 
 	url := fmt.Sprintf("https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/%s?api_key=%s", summonerName, ApiKey)
 
@@ -49,36 +49,40 @@ func GetSummoner(summonerName string) Summoner {
 		panic(err)
 	}
 	defer resp.Body.Close()
+	summonerDetails := Summoner{}
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		panic(err)
 	}
 
-	summonerDetails := Summoner{}
 	err = json.Unmarshal(body, &summonerDetails)
 	if err != nil {
 		panic(err)
 	}
 
-	return summonerDetails
+	return summonerDetails, nil
 }
 
-func GetSummonerDetails(summonerName string) SummonerProfileDetails {
-	summoner := GetSummoner(summonerName)
+func GetSummonerDetails(summonerName string) (SummonerProfileDetails, error) {
+	summoner, _ := GetSummoner(summonerName)
 	url := fmt.Sprintf("https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/%s?api_key=%s", summoner.Id, ApiKey)
 	resp, err := http.Get(url)
 	if err != nil {
 		panic(err)
 	}
 	defer resp.Body.Close()
+
+	defer resp.Body.Close()
+	summonerProfile := SummonerProfileDetails{}
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		panic(err)
 	}
-	summonerProfile := SummonerProfileDetails{}
 	err = json.Unmarshal(body, &summonerProfile)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return summonerProfile
+	return summonerProfile, nil
 }
