@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-var ApiKey = "test"
+var ApiKey = ""
 
 type Summoner struct {
 	Id           string `json:"id"`
