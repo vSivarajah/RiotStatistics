@@ -2,12 +2,15 @@ package matches
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/vsivarajah/RiotStatistics/summoner"
+	"github.com/vsivarajah/RiotStatistics/utils"
 )
 
 var ApiKey = ""
@@ -32,23 +35,39 @@ type Match struct {
 
 type MatchList []*Match
 
-func GetMatches(summonerName string) Matches {
+func GetMatches(summonerName string) (Matches, error) {
 	summoner, _ := summoner.GetSummoner(summonerName)
-	url := fmt.Sprintf("https://euw1.api.riotgames.com/lol/match/v4/matchlists/by-account/%s?api_key=%s", summoner.AccountId, ApiKey)
-	resp, err := http.Get(url)
+	url := fmt.Sprintf("https://euw1.api.riotgames.com/lol/match/v4/matchlists/by-account/%s", summoner.AccountId)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		panic(err)
+		// handle err
+	}
+	req.Header.Set("X-Riot-Token", os.Getenv("API_KEY"))
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		// handle err
 	}
 	defer resp.Body.Close()
+	matches := Matches{}
+
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest {
+		var errRes utils.ErrorResponse
+		if err = json.NewDecoder(resp.Body).Decode(&errRes); err == nil {
+			return matches, errors.New(errRes.Message)
+
+		}
+		return matches, fmt.Errorf("unknown error, status code: %d", resp.StatusCode)
+
+	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(string(body))
-	matches := Matches{}
 	err = json.Unmarshal(body, &matches)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return matches
+	return matches, nil
 }

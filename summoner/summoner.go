@@ -7,9 +7,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
-
-var ApiKey = ""
 
 type errorResponse struct {
 	Code    int    `json:"code"`
@@ -52,11 +51,17 @@ type SummonerProfileDetails []*SummonerProfile
 
 func GetSummoner(summonerName string) (Summoner, error) {
 
-	url := fmt.Sprintf("https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/%s?api_key=%s", summonerName, ApiKey)
+	url := fmt.Sprintf("https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/%s", summonerName)
 
-	resp, err := http.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		panic(err)
+		// handle err
+	}
+	req.Header.Set("X-Riot-Token", os.Getenv("API_KEY"))
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		// handle err
 	}
 	defer resp.Body.Close()
 	summonerDetails := Summoner{}
@@ -85,14 +90,20 @@ func GetSummoner(summonerName string) (Summoner, error) {
 
 func GetSummonerDetails(summonerName string) (SummonerProfileDetails, error) {
 	summoner, _ := GetSummoner(summonerName)
-	url := fmt.Sprintf("https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/%s?api_key=%s", summoner.Id, ApiKey)
-	resp, err := http.Get(url)
+	url := fmt.Sprintf("https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/%s", summoner.Id)
+
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		panic(err)
+		// handle err
+	}
+	req.Header.Set("X-Riot-Token", os.Getenv("API_KEY"))
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		// handle err
 	}
 	defer resp.Body.Close()
 
-	defer resp.Body.Close()
 	summonerProfile := SummonerProfileDetails{}
 
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest {
