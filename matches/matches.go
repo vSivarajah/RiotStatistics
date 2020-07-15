@@ -1,18 +1,5 @@
 package matches
 
-import (
-	"encoding/json"
-	"errors"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"os"
-
-	"github.com/vsivarajah/RiotStatistics/summoner"
-	"github.com/vsivarajah/RiotStatistics/utils"
-)
-
 var ApiKey = ""
 
 type Matches struct {
@@ -35,6 +22,7 @@ type Match struct {
 
 type MatchList []*Match
 
+/*
 func GetMatches(summonerName string) (Matches, error) {
 	summoner, _ := summoner.GetSummoner(summonerName)
 	url := fmt.Sprintf("https://euw1.api.riotgames.com/lol/match/v4/matchlists/by-account/%s", summoner.AccountId)
@@ -71,3 +59,5 @@ func GetMatches(summonerName string) (Matches, error) {
 	}
 	return matches, nil
 }
+
+*/

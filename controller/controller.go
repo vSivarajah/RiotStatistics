@@ -1,23 +1,26 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/vsivarajah/RiotStatistics/champions"
-	"github.com/vsivarajah/RiotStatistics/matches"
-	"github.com/vsivarajah/RiotStatistics/rest_errors"
-	"github.com/vsivarajah/RiotStatistics/summoner"
+	"github.com/vsivarajah/RiotStatistics/api"
+)
+
+var (
+	client *api.Client
 )
 
 func GetSummoner(c *gin.Context) {
 	summonerName := c.Param("name")
-	summonerProfile, err := summoner.GetSummonerDetails(summonerName)
-	fmt.Println(c.Request)
+	client = api.NewClient(new(http.Client))
+	client.APIKey = os.Getenv("RIOTAPI_KEY")
+
+	summonerProfile, err := client.Summoner.ByName(summonerName, "EUW1")
+
 	if err != nil {
-		restErr := rest_errors.NewBadRequestError("invalid json body")
-		c.JSON(restErr.Status(), restErr)
+		c.JSON(err.StatusCode, err)
 		return
 	}
 
@@ -25,8 +28,10 @@ func GetSummoner(c *gin.Context) {
 
 }
 
+/*
 func GetSummonerMatches(c *gin.Context) {
 	summonerName := c.Param("name")
+
 	summonerMatches, err := matches.GetMatches(summonerName)
 	if err != nil {
 		restErr := rest_errors.NewBadRequestError("Invalid json body")
@@ -42,3 +47,5 @@ func GetChampions(c *gin.Context) {
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.JSON(http.StatusOK, champions)
 }
+
+*/
