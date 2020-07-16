@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/prometheus/common/log"
 	"github.com/vsivarajah/RiotStatistics/api"
 )
 
@@ -15,7 +14,7 @@ var (
 	client *api.Client
 )
 
-func GetSummoner(c *gin.Context) {
+func GetMatchesBySummonerId(c *gin.Context) {
 	summonerName := c.Param("name")
 	client = api.NewClient(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
@@ -23,33 +22,20 @@ func GetSummoner(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "API KEY not provided")
 		return
 	}
-	summonerProfile, err := client.Summoner.ByName(summonerName, "EUW1")
 
+	//TODO: This should be fetched from a database if exists, otherwise call RIOT API
+	summoner, err := client.Summoner.ByName(summonerName, "EUW1")
 	if err != nil {
 		c.JSON(err.StatusCode, err)
 		return
 	}
-
-	c.JSON(http.StatusOK, summonerProfile)
-
-}
-func GetMatchesBySummonerId(c *gin.Context) {
-	summonerAccountId := c.Param("id")
-	client = api.NewClient(new(http.Client))
-	client.APIKey = os.Getenv("RIOTAPI_KEY")
-	if client.APIKey == "" {
-		c.JSON(http.StatusBadRequest, "API KEY not provided")
-		return
-	}
 	options := new(api.MatchListOptions)
-	minusTwoWeeks, err := time.ParseDuration("-336h")
-	if err != nil {
-		log.Errorf("MatchList.ByAccount could not parse duration")
-	}
+	minusTwoWeeks, _ := time.ParseDuration("-336h")
+
 	options.BeginTime = time.Now().Add(minusTwoWeeks).Unix() * 1000 // seconds to ms
 	options.Queues = make([]api.QueueType, 1)
 	options.Queues[0] = api.TEAM_BUILDER_RANKED_SOLO
-	matches, errorResponse := client.Matches.ByAccount(summonerAccountId, "EUW1", options)
+	matches, errorResponse := client.Matches.ByAccount(summoner.AccountId, "EUW1", options)
 	if errorResponse != nil {
 		c.JSON(errorResponse.StatusCode, err)
 		return
@@ -65,14 +51,22 @@ func GetChampions(c *gin.Context) {
 }
 
 func GetPositionsBySummoner(c *gin.Context) {
-	summonerId := c.Param("id")
+	summonerName := c.Param("name")
 	client = api.NewClient(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
 	if client.APIKey == "" {
 		c.JSON(http.StatusBadRequest, "API KEY not provided")
 		return
 	}
-	data, restErr := client.League.PositionsBySummoner(summonerId, "EUW1")
+
+	//TODO: This should be fetched from a database if exists, otherwise call RIOT API
+	summoner, err := client.Summoner.ByName(summonerName, "EUW1")
+	if err != nil {
+		c.JSON(err.StatusCode, err)
+		return
+	}
+
+	data, restErr := client.League.PositionsBySummoner(summoner.Id, "EUW1")
 	fmt.Println(data)
 	if restErr != nil {
 		c.JSON(restErr.StatusCode, restErr)
