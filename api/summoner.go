@@ -1,8 +1,6 @@
 package api
 
 import (
-	"fmt"
-
 	"github.com/vsivarajah/RiotStatistics/utils"
 )
 
@@ -28,6 +26,5 @@ func (m *SummonerMethod) ByName(name, platformId string) (*SummonerDTO, *utils.A
 
 		return nil, &utils.ApplicationError{StatusCode: resp.StatusCode}
 	}
-	fmt.Println(data.AccountId)
 	return data, nil
 }

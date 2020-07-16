@@ -1,4 +1,4 @@
-package champions
+package api
 
 import (
 	"encoding/json"

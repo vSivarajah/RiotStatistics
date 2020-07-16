@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -26,6 +25,8 @@ type Client struct {
 	client   *http.Client
 	APIKey   string
 	Summoner *SummonerMethod
+	Matches  *MatchListMethod
+	League   *LeagueMethod
 }
 
 func NewClient(httpClient *http.Client) *Client {
@@ -35,6 +36,8 @@ func NewClient(httpClient *http.Client) *Client {
 	}
 
 	c.Summoner = &SummonerMethod{client: c}
+	c.Matches = &MatchListMethod{client: c}
+	c.League = &LeagueMethod{client: c}
 
 	return c
 }
@@ -69,8 +72,6 @@ func (c *Client) get(basePath, relPath, platformId string, decoded interface{}) 
 	combinedURL.RawQuery = q.Encode()
 
 	req, err := http.NewRequest("GET", combinedURL.String(), nil)
-	fmt.Println(req)
-
 	if err != nil {
 		return nil, &utils.ApplicationError{
 			Message: err.Error(),
