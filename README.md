@@ -7,8 +7,14 @@
 ````
 go get -u
 ````
-
-3. Start the http server
+3. Export RIOTAPI_KEY
+````
+Linux/MacOS
+export RIOTAPI_KEY=<your api key>
+Windows
+set RIOTAPI_KEY=<your api key>
+````
+4. Start the http server
 ````
 go run main.go
 ````

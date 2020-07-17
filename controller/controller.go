@@ -18,6 +18,8 @@ func GetMatchesBySummonerId(c *gin.Context) {
 	summonerName := c.Param("name")
 	client = api.NewClient(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
 	if client.APIKey == "" {
 		c.JSON(http.StatusBadRequest, "API KEY not provided")
 		return
@@ -54,6 +56,8 @@ func GetPositionsBySummoner(c *gin.Context) {
 	summonerName := c.Param("name")
 	client = api.NewClient(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
 	if client.APIKey == "" {
 		c.JSON(http.StatusBadRequest, "API KEY not provided")
 		return
