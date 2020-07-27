@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/google/go-querystring/query"
 	"github.com/vsivarajah/RiotStatistics/utils"
 )
@@ -11,6 +13,22 @@ type MatchListDto struct {
 	TotalGames int                 `json:"totalGames"`
 	StartIndex int                 `json:"startIndex"`
 	EndIndex   int                 `json:"endIndex"`
+}
+
+type MatchDTO struct {
+	GameId                int                     `json:"gameId"`
+	ParticipantIdentities []ParticipantIdentities `json:"participantidentities"`
+	QueueId               int                     `json:"queueId"`
+	GameType              string                  `json:"gameType"`
+	GameDuration          int64                   `json:"gameDuration"`
+	Teams                 []TeamStatsDTO          `json:"teams"`
+	PlatformId            string                  `json:"platformId"`
+	GameCreation          int64                   `json:"gameCreation"`
+	SeasonId              int                     `json:"seasonId"`
+	GameVersion           string                  `json:"gameVersion"`
+	MapId                 int                     `json:"mapId"`
+	GameMode              string                  `json:"gameMode"`
+	Participants          []ParticipantDTO        `json:"participants"`
 }
 
 type MatchReferenceDto struct {
@@ -64,6 +82,18 @@ func (m *MatchListMethod) ByAccount(accountId string, platformId string, options
 		}
 	}
 	data := new(MatchListDto)
+	if resp, err := m.client.get(platformURLBase, relPath, platformId, data); err != nil {
+		return nil, &utils.ApplicationError{
+			StatusCode: resp.StatusCode,
+		}
+	}
+	return data, nil
+}
+
+func (m *MatchListMethod) MatchDetailsByGameId(gameId int, platformId string) (*MatchDTO, *utils.ApplicationError) {
+	relPath := fmt.Sprintf("/lol/match/v4/matches/%d", gameId)
+	fmt.Println(relPath)
+	data := new(MatchDTO)
 	if resp, err := m.client.get(platformURLBase, relPath, platformId, data); err != nil {
 		return nil, &utils.ApplicationError{
 			StatusCode: resp.StatusCode,

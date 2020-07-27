@@ -6,4 +6,5 @@ func MapUrls() {
 	router.GET("/matches/:name", controller.GetMatchesBySummonerId)
 	router.GET("/champions", controller.GetChampions)
 	router.GET("/summoner/:name", controller.GetPositionsBySummoner)
+	router.GET("match/:id", controller.GetMatchDetailsByGameId)
 }

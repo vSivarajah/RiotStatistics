@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -78,4 +79,23 @@ func GetPositionsBySummoner(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, data)
 
+}
+
+func GetMatchDetailsByGameId(c *gin.Context) {
+	gameId := c.Param("id")
+	gameIdInt, _ := strconv.Atoi(gameId)
+	client = api.NewClient(new(http.Client))
+	client.APIKey = os.Getenv("RIOTAPI_KEY")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	if client.APIKey == "" {
+		c.JSON(http.StatusBadRequest, "API KEY not provided")
+		return
+	}
+
+	matchDetail, err := client.Matches.MatchDetailsByGameId(gameIdInt, "EUW1")
+	if err != nil {
+		c.JSON(err.StatusCode, err)
+		return
+	}
+	c.JSON(http.StatusOK, matchDetail)
 }
