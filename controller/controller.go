@@ -19,7 +19,7 @@ func GetMatchesBySummonerId(c *gin.Context) {
 	summonerName := c.Param("name")
 	client = api.NewClient(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	//c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if client.APIKey == "" {
 		c.JSON(http.StatusBadRequest, "API KEY not provided")
@@ -49,7 +49,7 @@ func GetMatchesBySummonerId(c *gin.Context) {
 
 func GetChampions(c *gin.Context) {
 	champions := api.GetChampions()
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	//c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.JSON(http.StatusOK, champions)
 }
 
@@ -57,7 +57,7 @@ func GetPositionsBySummoner(c *gin.Context) {
 	summonerName := c.Param("name")
 	client = api.NewClient(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	//c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if client.APIKey == "" {
 		c.JSON(http.StatusBadRequest, "API KEY not provided")
@@ -88,7 +88,7 @@ func GetMatchDetailsByGameId(c *gin.Context) {
 	gameIdInt, _ := strconv.Atoi(gameId)
 	client = api.NewClient(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	//c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	if client.APIKey == "" {
 		c.JSON(http.StatusBadRequest, "API KEY not provided")
 		return

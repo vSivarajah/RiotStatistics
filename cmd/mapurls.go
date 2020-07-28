@@ -7,10 +7,17 @@ import (
 
 func MapUrls() *gin.Engine {
 	router := gin.Default()
-	router.GET("/matches/:name", controller.GetMatchesBySummonerId)
-	router.GET("/champions", controller.GetChampions)
-	router.GET("/summoner/:name", controller.GetPositionsBySummoner)
-	router.GET("match/:id", controller.GetMatchDetailsByGameId)
+
+	root := router.Group("/")
+	root.Use(CustomHeaders())
+	{
+
+		root.GET("/matches/:name", controller.GetMatchesBySummonerId)
+		root.GET("/champions", controller.GetChampions)
+		root.GET("/summoner/:name", controller.GetPositionsBySummoner)
+		root.GET("match/:id", controller.GetMatchDetailsByGameId)
+
+	}
 
 	return router
 }

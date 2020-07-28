@@ -78,7 +78,6 @@ func GetChampions() ChampionData {
 	data := ChampionData{}
 	err := json.Unmarshal(plan, &data)
 	if err != nil {
-		log.Println("yolo")
 		log.Fatal(err)
 	}
 	return data
