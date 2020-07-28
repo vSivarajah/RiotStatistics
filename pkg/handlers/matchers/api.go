@@ -3,6 +3,7 @@ package matchers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/vsivarajah/RiotStatistics/api"
+	"github.com/vsivarajah/RiotStatistics/producer"
 	"net/http"
 	"strconv"
 	"time"
@@ -10,10 +11,13 @@ import (
 
 type Api struct {
 	client *api.Client
+	sender producer.Sender
+	championRepo string
+	summonerRepo string
 }
 
-func New(c *api.Client) Api {
-	return Api{client: c}
+func New(c *api.Client, prd producer.Sender) Api {
+	return Api{client: c, sender: prd}
 }
 
 func (a *Api) GetMatchesBySummonerId(c *gin.Context) {
@@ -50,5 +54,10 @@ func (a *Api) GetMatchDetailsByGameId(c *gin.Context) {
 		c.JSON(err.StatusCode, err)
 		return
 	}
+
+	if err := a.sender.Send(c.Request.Context(), matchDetail); err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	}
+
 	c.JSON(http.StatusOK, matchDetail)
 }

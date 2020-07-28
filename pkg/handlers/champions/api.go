@@ -16,6 +16,12 @@ func New() Api {
 }
 
 func (a *Api) Get(ctx *gin.Context) {
+
+
+
+
+
+
 	plan, _ := ioutil.ReadFile("champions.json")
 	data := api.ChampionData{}
 	err := json.Unmarshal(plan, &data)

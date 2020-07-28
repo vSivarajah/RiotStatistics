@@ -7,6 +7,7 @@ import (
 	"github.com/vsivarajah/RiotStatistics/pkg/handlers/matchers"
 	"github.com/vsivarajah/RiotStatistics/pkg/handlers/summoners"
 	"github.com/vsivarajah/RiotStatistics/pkg/middlewares"
+	"github.com/vsivarajah/RiotStatistics/producer"
 )
 
 type App struct {
@@ -17,18 +18,18 @@ type App struct {
 	apiSumnr summoners.Api
 }
 
-func New(c *api.Client) *App {
+func New(c *api.Client, prd producer.Sender) *App {
 	app := new(App)
 
 	// setup all apis
 	app.apiChamp = champions.New()
-	app.apiMatch = matchers.New(c)
+	app.apiMatch = matchers.New(c, prd)
 	app.apiSumnr = summoners.New(c)
 
 	// setup routes
 	app.Router = gin.Default()
 	root := app.Router.Group("/")
-	root.Use(middlewares.CustomHeaders())
+	root.Use(middlewares.CustomHeaders(), gin.Recovery(), gin.Logger())
 	{
 
 		root.GET("/matches/:name", app.apiMatch.GetMatchesBySummonerId)
