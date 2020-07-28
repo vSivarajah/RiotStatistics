@@ -1,15 +1,14 @@
 package cmd
 
-import (
-	"github.com/gin-gonic/gin"
-)
 
-var (
-	router = gin.Default()
-)
+// avoid global variables
+
+//var (
+//	router = gin.Default()
+//)
 
 func StartApplication() error {
-	MapUrls()
+	router := MapUrls()
 	if err := router.Run(":8081"); err != nil {
 		return err
 	}
