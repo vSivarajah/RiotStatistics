@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,8 +8,10 @@ var (
 	router = gin.Default()
 )
 
-func StartApplication() {
+func StartApplication() error {
 	MapUrls()
-	log.Printf("Starting application server...")
-	router.Run(":8081")
+	if err := router.Run(":8081"); err != nil {
+		return err
+	}
+	return nil
 }
