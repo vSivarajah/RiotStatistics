@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/vsivarajah/RiotStatistics/app"
+	"github.com/vsivarajah/RiotStatistics/cmd"
 )
 
 func main() {
-	app.StartApplication()
+	cmd.StartApplication()
 
 }
