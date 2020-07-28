@@ -17,7 +17,7 @@ var (
 
 func GetMatchesBySummonerId(c *gin.Context) {
 	summonerName := c.Param("name")
-	client = api.NewClient(new(http.Client))
+	client = api.New(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
 	//c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
@@ -55,7 +55,7 @@ func GetChampions(c *gin.Context) {
 
 func GetPositionsBySummoner(c *gin.Context) {
 	summonerName := c.Param("name")
-	client = api.NewClient(new(http.Client))
+	client = api.New(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
 	//c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
@@ -86,7 +86,7 @@ func GetPositionsBySummoner(c *gin.Context) {
 func GetMatchDetailsByGameId(c *gin.Context) {
 	gameId := c.Param("id")
 	gameIdInt, _ := strconv.Atoi(gameId)
-	client = api.NewClient(new(http.Client))
+	client = api.New(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
 	//c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	if client.APIKey == "" {

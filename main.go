@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	if err := cmd.StartApplication(); err != nil {
+	if err := cmd.Start(); err != nil {
 		log.Printf("error starting server %v", err)
 	}
 	log.Println("Starting application server...")
