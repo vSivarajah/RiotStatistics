@@ -66,12 +66,14 @@ func GetPositionsBySummoner(c *gin.Context) {
 
 	//TODO: This should be fetched from a database if exists, otherwise call RIOT API
 	summoner, err := client.Summoner.ByName(summonerName, "EUW1")
+
 	if err != nil {
 		c.JSON(err.StatusCode, err)
 		return
 	}
 
 	data, restErr := client.League.PositionsBySummoner(summoner.Id, "EUW1")
+
 	fmt.Println(data)
 	if restErr != nil {
 		c.JSON(restErr.StatusCode, restErr)
@@ -93,6 +95,7 @@ func GetMatchDetailsByGameId(c *gin.Context) {
 	}
 
 	matchDetail, err := client.Matches.MatchDetailsByGameId(gameIdInt, "EUW1")
+
 	if err != nil {
 		c.JSON(err.StatusCode, err)
 		return

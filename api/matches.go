@@ -4,7 +4,13 @@ import (
 	"fmt"
 
 	"github.com/google/go-querystring/query"
+	"github.com/vsivarajah/RiotStatistics/kafka_producer"
 	"github.com/vsivarajah/RiotStatistics/utils"
+)
+
+const (
+	kafkaConn = "localhost:9092"
+	topic     = "senz"
 )
 
 // MatchList struct describes a response to a Match List api call
@@ -72,6 +78,7 @@ type MatchListMethod struct {
 
 func (m *MatchListMethod) ByAccount(accountId string, platformId string, options *MatchListOptions) (*MatchListDto, *utils.ApplicationError) {
 	relPath := "/lol/match/v4/matchlists/by-account/" + accountId
+
 	if options != nil {
 		if vals, err := query.Values(options); err != nil {
 			return nil, &utils.ApplicationError{
@@ -87,6 +94,7 @@ func (m *MatchListMethod) ByAccount(accountId string, platformId string, options
 			StatusCode: resp.StatusCode,
 		}
 	}
+
 	return data, nil
 }
 
@@ -94,10 +102,29 @@ func (m *MatchListMethod) MatchDetailsByGameId(gameId int, platformId string) (*
 	relPath := fmt.Sprintf("/lol/match/v4/matches/%d", gameId)
 	fmt.Println(relPath)
 	data := new(MatchDTO)
+
 	if resp, err := m.client.get(platformURLBase, relPath, platformId, data); err != nil {
 		return nil, &utils.ApplicationError{
 			StatusCode: resp.StatusCode,
 		}
 	}
+
+	producer, err := kafka_producer.KafkaService.Init()
+	if err != nil {
+		fmt.Println("Error producer: ", err.Error())
+	}
+
+	// read command line input
+
+	for {
+		msg := "Vignesh test"
+
+		// publish without goroutene
+		kafka_producer.KafkaService.Send(msg, producer)
+
+		// publish with go routene
+		// go publish(msg, producer)
+	}
+
 	return data, nil
 }

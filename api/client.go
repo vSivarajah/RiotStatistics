@@ -38,7 +38,6 @@ func NewClient(httpClient *http.Client) *Client {
 	c.Summoner = &SummonerMethod{client: c}
 	c.Matches = &MatchListMethod{client: c}
 	c.League = &LeagueMethod{client: c}
-
 	return c
 }
 
