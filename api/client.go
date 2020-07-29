@@ -29,7 +29,7 @@ type Client struct {
 	League   *LeagueMethod
 }
 
-func NewClient(httpClient *http.Client) *Client {
+func New(httpClient *http.Client) *Client {
 	c := &Client{
 		client: httpClient,
 		APIKey: "",

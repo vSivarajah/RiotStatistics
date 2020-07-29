@@ -12,7 +12,7 @@ func TestPositionsBySummonerNoError(t *testing.T) {
 
 	//Initialization
 	summonerId := "Koa6GIXPMvhQ6BW402ph5mM02FXSVBEKOWW3p2bbZNbhmYQ"
-	client := NewClient(new(http.Client))
+	client := New(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
 
 	//Execution
@@ -32,7 +32,7 @@ func TestPositionsBySummonerError(t *testing.T) {
 
 	//Initialization
 	summonerId := "Koa6"
-	client := NewClient(new(http.Client))
+	client := New(new(http.Client))
 	client.APIKey = os.Getenv("RIOTAPI_KEY")
 
 	//Execution
