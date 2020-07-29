@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/Shopify/sarama v1.26.4
+	github.com/confluentinc/confluent-kafka-go v1.4.2
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
@@ -19,5 +20,6 @@ require (
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
 	golang.org/x/sys v0.0.0-20200728102440-3e129f6d46b1 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
+	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.4.2
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
