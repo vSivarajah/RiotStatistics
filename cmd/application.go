@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"context"
-	"errors"
 	"fmt"
+	"github.com/vsivarajah/RiotStatistics/pkg/config"
 	"net/http"
 	"os"
 	"time"
@@ -15,16 +14,18 @@ import (
 	"github.com/vsivarajah/RiotStatistics/producer/kafka"
 )
 
-func Start() error {
+func Start() (string, error) {
+
+	// setup configurations
+	conf, field, err := config.New()
+	if err != nil {
+		return field, err
+	}
 
 	// setup client
 	cc := &http.Client{Timeout: 5 * time.Second}
 	client := api.New(cc)
-	key := os.Getenv("RIOTAPI_KEY")
-	if key == "" {
-		return errors.New("api key missing")
-	}
-	client.APIKey = key
+	client.APIKey = conf.Riot.ApiKey
 
 	// setup kafka producer
 	sender := os.Getenv("SENDER")
@@ -32,20 +33,17 @@ func Start() error {
 	switch sender {
 	case "kafka":
 		fmt.Println("kafka producer is run")
-		prd = kafka.New()
+		prd, err = kafka.New(conf)
+		if err != nil {
+			return "kafka config failed", err
+		}
 	default:
 		prd = db.New("")
 	}
 
-	ctx := context.Background()
-
-	if err := prd.Init(ctx, nil); err != nil {
-		return err
-	}
-
 	app := setup.New(client, prd)
 	if err := app.Router.Run(":8085"); err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return "", nil
 }

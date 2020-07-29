@@ -17,9 +17,9 @@ func New(...string) producer.Sender {
 	}
 }
 
-func (db *db) Init(ctx context.Context, config interface{}) error {
-	return nil
-}
+//func (db *db) Init(ctx context.Context, config interface{}) error {
+//	return nil
+//}
 
 func (db *db) Send(ctx context.Context, message interface{}) error {
 

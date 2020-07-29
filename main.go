@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	if err := cmd.Start(); err != nil {
-		log.Printf("error starting server %v", err)
+	if message, err := cmd.Start(); err != nil {
+		log.Printf("error starting server :: message: %s, err: %v", message, err)
 	}
 	log.Println("Starting application server...")
 
