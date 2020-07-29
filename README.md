@@ -11,8 +11,12 @@ go get -u
 ````
 Linux/MacOS
 export RIOTAPI_KEY=<your api key>
+export KAFKA_BOOTSTRAP_SERVERS=localhost:9092 
+
 Windows
 set RIOTAPI_KEY=<your api key>
+set KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+
 ````
 4. Start the http server
 ````

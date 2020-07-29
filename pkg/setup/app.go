@@ -2,12 +2,11 @@ package setup
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/vsivarajah/RiotStatistics/api"
+	"github.com/vsivarajah/RiotStatistics/pkg/deps"
 	"github.com/vsivarajah/RiotStatistics/pkg/handlers/champions"
 	"github.com/vsivarajah/RiotStatistics/pkg/handlers/matchers"
 	"github.com/vsivarajah/RiotStatistics/pkg/handlers/summoners"
 	"github.com/vsivarajah/RiotStatistics/pkg/middlewares"
-	"github.com/vsivarajah/RiotStatistics/producer"
 )
 
 type App struct {
@@ -18,13 +17,13 @@ type App struct {
 	apiSumnr summoners.Api
 }
 
-func New(c *api.Client, prd producer.Sender) *App {
+func New(deps *deps.Dependencies) *App {
 	app := new(App)
 
 	// setup all apis
 	app.apiChamp = champions.New()
-	app.apiMatch = matchers.New(c, prd)
-	app.apiSumnr = summoners.New(c)
+	app.apiMatch = matchers.New(deps)
+	app.apiSumnr = summoners.New(deps)
 
 	// setup routes
 	app.Router = gin.Default()

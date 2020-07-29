@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"os"
+	"time"
+)
 
 const (
 	// riot
@@ -31,7 +34,6 @@ func New() (*Config, string, error) {
 	return c, "", nil
 }
 
-
 type Config struct {
 	DB    db
 	Riot  riot
@@ -39,7 +41,8 @@ type Config struct {
 }
 
 type riot struct {
-	ApiKey string
+	ApiKey  string
+	Timeout time.Duration
 }
 
 type kafka struct {
@@ -59,6 +62,8 @@ func (c *Config) setupRiot() (string, error) {
 	if r.ApiKey = os.Getenv(keyRiotKey); r.ApiKey == "" {
 		return keyRiotKey, errEnvNotSet
 	}
+
+	r.Timeout = time.Second * 5
 
 	c.Riot = r
 	return "", nil

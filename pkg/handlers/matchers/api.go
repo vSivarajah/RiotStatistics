@@ -2,6 +2,7 @@ package matchers
 
 import (
 	"fmt"
+	"github.com/vsivarajah/RiotStatistics/pkg/deps"
 	"net/http"
 	"strconv"
 	"time"
@@ -16,8 +17,8 @@ type Api struct {
 	sender producer.Sender
 }
 
-func New(c *api.Client, prd producer.Sender) Api {
-	return Api{client: c, sender: prd}
+func New(d *deps.Dependencies) Api {
+	return Api{client: d.Client, sender: d.Sender}
 }
 
 func (a *Api) GetMatchesBySummonerId(c *gin.Context) {
