@@ -1,19 +1,19 @@
 package matchers
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/vsivarajah/RiotStatistics/api"
-	"github.com/vsivarajah/RiotStatistics/producer"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/vsivarajah/RiotStatistics/api"
+	"github.com/vsivarajah/RiotStatistics/producer"
 )
 
 type Api struct {
 	client *api.Client
 	sender producer.Sender
-	championRepo string
-	summonerRepo string
 }
 
 func New(c *api.Client, prd producer.Sender) Api {
@@ -45,11 +45,12 @@ func (a *Api) GetMatchesBySummonerId(c *gin.Context) {
 }
 
 func (a *Api) GetMatchDetailsByGameId(c *gin.Context) {
+
 	gameId := c.Param("id")
 	gameIdInt, _ := strconv.Atoi(gameId)
 
 	matchDetail, err := a.client.Matches.MatchDetailsByGameId(gameIdInt, "EUW1")
-
+	fmt.Println("this method gets called, GetMatchDetails")
 	if err != nil {
 		c.JSON(err.StatusCode, err)
 		return

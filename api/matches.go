@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/google/go-querystring/query"
-	"github.com/vsivarajah/RiotStatistics/kafka_producer"
 	"github.com/vsivarajah/RiotStatistics/utils"
 )
 
@@ -107,23 +106,6 @@ func (m *MatchListMethod) MatchDetailsByGameId(gameId int, platformId string) (*
 		return nil, &utils.ApplicationError{
 			StatusCode: resp.StatusCode,
 		}
-	}
-
-	producer, err := kafka_producer.KafkaService.Init()
-	if err != nil {
-		fmt.Println("Error producer: ", err.Error())
-	}
-
-	// read command line input
-
-	for {
-		msg := "Vignesh test"
-
-		// publish without goroutene
-		kafka_producer.KafkaService.Send(msg, producer)
-
-		// publish with go routene
-		// go publish(msg, producer)
 	}
 
 	return data, nil

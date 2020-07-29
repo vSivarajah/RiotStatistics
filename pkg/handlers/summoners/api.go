@@ -1,10 +1,10 @@
 package summoners
 
 import (
-	"fmt"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/vsivarajah/RiotStatistics/api"
-	"net/http"
 )
 
 type Api struct {
@@ -28,7 +28,6 @@ func (a *Api) GetPositionsBySummoner(c *gin.Context) {
 
 	data, restErr := a.client.League.PositionsBySummoner(summoner.Id, "EUW1")
 
-	fmt.Println(data)
 	if restErr != nil {
 		c.JSON(restErr.StatusCode, restErr)
 		return

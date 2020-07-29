@@ -2,11 +2,13 @@ package kafka
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
-	"github.com/Shopify/sarama"
-	"github.com/vsivarajah/RiotStatistics/producer"
 	"log"
 	"os"
+
+	"github.com/Shopify/sarama"
+	"github.com/vsivarajah/RiotStatistics/producer"
 )
 
 type kafkaService struct {
@@ -31,7 +33,7 @@ func (k *kafkaService) Init(ctx context.Context, cfg interface{}) error {
 	//prd, err := sarama.NewAsyncProducer([]string{kafkaConn}, config)
 
 	// sync producer
-	prd, err := sarama.NewSyncProducer([]string{""}, config)
+	prd, err := sarama.NewSyncProducer([]string{"localhost:9092"}, config)
 	if err != nil {
 		return err
 	}
@@ -42,11 +44,12 @@ func (k *kafkaService) Init(ctx context.Context, cfg interface{}) error {
 
 func (k *kafkaService) Send(ctx context.Context, message interface{}) error {
 	// publish sync
+	message_2, _ := json.Marshal(message)
 	msg := &sarama.ProducerMessage{
-		Topic: "",
-		Value: sarama.StringEncoder(message.(string)),
-	}
+		Topic: "vigi",
 
+		Value: sarama.ByteEncoder(message_2),
+	}
 	p, o, err := k.prod.SendMessage(msg)
 	if err != nil {
 		return err

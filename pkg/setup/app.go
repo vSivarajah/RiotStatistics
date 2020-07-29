@@ -29,7 +29,7 @@ func New(c *api.Client, prd producer.Sender) *App {
 	// setup routes
 	app.Router = gin.Default()
 	root := app.Router.Group("/")
-	root.Use(middlewares.CustomHeaders(), gin.Recovery(), gin.Logger())
+	root.Use(middlewares.CustomHeaders())
 	{
 
 		root.GET("/matches/:name", app.apiMatch.GetMatchesBySummonerId)
