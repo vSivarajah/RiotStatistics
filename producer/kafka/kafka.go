@@ -4,8 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
-
+	"github.com/vsivarajah/RiotStatistics/pkg/config"
 	"github.com/vsivarajah/RiotStatistics/producer"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
@@ -14,27 +13,17 @@ type kafkaService struct {
 	prod *kafka.Producer
 }
 
-func New() producer.Sender {
-	return &kafkaService{}
-}
+func New(conf *config.Config) (producer.Sender, error) {
 
-func (k *kafkaService) Init(ctx context.Context, cfg interface{}) error {
-	// setup sarama log to stdout
-
-	// async producer
-	//prd, err := sarama.NewAsyncProducer([]string{kafkaConn}, config)
-
-	// sync producer
-
-	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
+	p, err := kafka.NewProducer(&kafka.ConfigMap{
+		"bootstrap.servers": conf.Kafka.BootstrapServers,
+	})
 
 	if err != nil {
-		fmt.Printf("Failed to create producer: %s\n", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	k.prod = p
-	return nil
+	return &kafkaService{prod: p}, nil
 }
 
 func (k *kafkaService) Send(ctx context.Context, message interface{}) error {

@@ -1,6 +1,7 @@
 package summoners
 
 import (
+	"github.com/vsivarajah/RiotStatistics/pkg/deps"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,8 +12,8 @@ type Api struct {
 	client *api.Client
 }
 
-func New(c *api.Client) Api {
-	return Api{client: c}
+func New(d *deps.Dependencies) Api {
+	return Api{client: d.Client}
 }
 
 func (a *Api) GetPositionsBySummoner(c *gin.Context) {
