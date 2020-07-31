@@ -2,10 +2,11 @@ package matchers
 
 import (
 	"fmt"
-	"github.com/vsivarajah/RiotStatistics/pkg/deps"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/vsivarajah/RiotStatistics/pkg/deps"
 
 	"github.com/gin-gonic/gin"
 	"github.com/vsivarajah/RiotStatistics/api"
@@ -56,10 +57,10 @@ func (a *Api) GetMatchDetailsByGameId(c *gin.Context) {
 		c.JSON(err.StatusCode, err)
 		return
 	}
-
-	if err := a.sender.Send(c.Request.Context(), matchDetail); err != nil {
-		c.JSON(http.StatusInternalServerError, err)
-	}
-
+	/*
+		if err := a.sender.Send(c.Request.Context(), matchDetail); err != nil {
+			c.JSON(http.StatusInternalServerError, err)
+		}
+	*/
 	c.JSON(http.StatusOK, matchDetail)
 }

@@ -1,0 +1,3 @@
+
+-- Select summonername, assists,kills, deaths and cs count from matchdetails topic in kafka 
+select gameId, EXTRACTJSONFIELD(explode(participantidentities), '$.player.summonerName') as summonername, EXTRACTJSONFIELD(explode(participants), '$.stats.kills') as kills, EXTRACTJSONFIELD(explode(participants), '$.stats.deaths') as deaths, EXTRACTJSONFIELD(explode(participants), '$.stats.assists')as assists, EXTRACTJSONFIELD(explode(participants), '$.stats.totalMinionsKilled') as minions_cs, EXTRACTJSONFIELD(explode(participants), '$.stats.neutralMinionsKilled') AS neutral_cs, EXTRACTJSONFIELD(explode(participants), '$.championId') as championId from matchdetails emit changes;
