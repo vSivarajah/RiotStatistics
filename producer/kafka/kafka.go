@@ -40,9 +40,9 @@ func (k *kafkaService) Init(ctx context.Context, cfg interface{}) error {
 func (k *kafkaService) Send(ctx context.Context, message interface{}) error {
 	// publish sync
 	message_2, _ := json.Marshal(message)
-	deliveryChan := make(chan kafka.Event)
-	topic := "vigitorres"
 
+	deliveryChan := make(chan kafka.Event)
+	topic := "matchDetails"
 	err := k.prod.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
 		Value:          []byte(message_2),

@@ -91,7 +91,7 @@ type ParticipantStats struct {
 	MagicDamageDealt                int64 `json:"magicDamageDealt"`
 	MagicDamageDealtToChampions     int64 `json:"magicDamageDealtToChampions"`
 	MagicDamageTaken                int64 `json:"magicDamageTaken"`
-	MinionsKilled                   int64 `json:"minionsKilled"`
+	TotalMinionsKilled              int64 `json:"totalMinionsKilled"`
 	NeutralMinionsKilled            int64 `json:"neutralMinionsKilled"`
 	NeutralMinionsKilledEnemyJungle int64 `json:"neutralMinionsKilledEnemyJungle"`
 	NeutralMinionsKilledTeamJungle  int64 `json:"neutralMinionsKilledTeamJungle"`
