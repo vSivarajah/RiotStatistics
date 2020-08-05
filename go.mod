@@ -7,6 +7,8 @@ require (
 	github.com/confluentinc/confluent-kafka-go v1.4.2
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
+	github.com/go-redis/redis v6.15.8+incompatible
+	github.com/go-redis/redis/v7 v7.4.0
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/google/go-querystring v1.0.0
 	github.com/json-iterator/go v1.1.10 // indirect
@@ -16,9 +18,11 @@ require (
 	github.com/pierrec/lz4 v2.5.2+incompatible // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20200313005456-10cdbea86bc0 // indirect
 	github.com/stretchr/testify v1.4.0
+	go.mongodb.org/mongo-driver v1.4.0
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899 // indirect
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
 	golang.org/x/sys v0.0.0-20200728102440-3e129f6d46b1 // indirect
+	golang.org/x/tools/gopls v0.4.3 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.4.2
 	gopkg.in/yaml.v2 v2.3.0 // indirect

@@ -17,6 +17,7 @@ const (
 	keyDbPort = "DB_PORT"
 	keyDbUser = "DB_USER"
 	keyDbPass = "DB_PASS"
+	keyDBURI  = "DB_URI"
 )
 
 func New() (*Config, string, error) {
@@ -54,6 +55,7 @@ type db struct {
 	Port string
 	User string
 	Pass string
+	URI  string
 }
 
 func (c *Config) setupRiot() (string, error) {
@@ -97,6 +99,10 @@ func (c *Config) setupDB() (string, error) {
 
 	if d.Port = os.Getenv(keyDbPass); d.Pass == "" {
 		return keyDbPass, errEnvNotSet
+	}
+
+	if d.URI = os.Getenv(keyDBURI); d.URI == "" {
+		return keyDBURI, errEnvNotSet
 	}
 
 	c.DB = d

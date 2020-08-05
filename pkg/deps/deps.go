@@ -1,12 +1,11 @@
 package deps
 
 import (
+	"net/http"
+
 	"github.com/vsivarajah/RiotStatistics/api"
 	"github.com/vsivarajah/RiotStatistics/pkg/config"
-	"github.com/vsivarajah/RiotStatistics/producer"
-	kk "github.com/vsivarajah/RiotStatistics/producer/kafka"
-
-	"net/http"
+	db "github.com/vsivarajah/RiotStatistics/repositories/db"
 )
 
 type Dependencies struct {
@@ -29,8 +28,14 @@ func New() (*Dependencies, string, error) {
 	cc := &http.Client{Timeout: c.Riot.Timeout}
 	client := api.New(cc)
 	client.APIKey = c.Riot.ApiKey
+	/*
+		sender, err := kk.New(c)
+		if err != nil {
+			return nil, "error setting sender", err
+		}
+	*/
 
-	sender, err := kk.New(c)
+	sender, err := db.NewRedisCache(c)
 	if err != nil {
 		return nil, "error setting sender", err
 	}

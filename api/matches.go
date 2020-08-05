@@ -12,6 +12,11 @@ const (
 	topic     = "senz"
 )
 
+type Match struct {
+	*MatchListDto
+	*MatchDTO
+}
+
 // MatchList struct describes a response to a Match List api call
 type MatchListDto struct {
 	Matches    []MatchReferenceDto `json:"matches,omitempty"`
@@ -21,19 +26,19 @@ type MatchListDto struct {
 }
 
 type MatchDTO struct {
-	GameId                int                     `json:"gameId"`
-	ParticipantIdentities []ParticipantIdentities `json:"participantidentities"`
-	QueueId               int                     `json:"queueId"`
-	GameType              string                  `json:"gameType"`
-	GameDuration          int64                   `json:"gameDuration"`
-	Teams                 []TeamStatsDTO          `json:"teams"`
-	PlatformId            string                  `json:"platformId"`
-	GameCreation          int64                   `json:"gameCreation"`
-	SeasonId              int                     `json:"seasonId"`
-	GameVersion           string                  `json:"gameVersion"`
-	MapId                 int                     `json:"mapId"`
-	GameMode              string                  `json:"gameMode"`
-	Participants          []ParticipantDTO        `json:"participants"`
+	GameId                int                     `json:"gameId" bson:"_id" `
+	ParticipantIdentities []ParticipantIdentities `json:"participantidentities" bson:"participantidentities"`
+	QueueId               int                     `json:"queueId" bson:"queueId"`
+	GameType              string                  `json:"gameType" bson:"gameType"`
+	GameDuration          int64                   `json:"gameDuration" bson:"gameDuration"`
+	Teams                 []TeamStatsDTO          `json:"teams" bson:"teams"`
+	PlatformId            string                  `json:"platformId" bson:"platformId"`
+	GameCreation          int64                   `json:"gameCreation" bson:"gameCreation"`
+	SeasonId              int                     `json:"seasonId" bson:"seasonId"`
+	GameVersion           string                  `json:"gameVersion" bson:"gameVersion"`
+	MapId                 int                     `json:"mapId" bson:"mapId"`
+	GameMode              string                  `json:"gameMode" bson:"gameMode"`
+	Participants          []ParticipantDTO        `json:"participants" bson:"participants"`
 }
 
 type MatchReferenceDto struct {
@@ -42,7 +47,7 @@ type MatchReferenceDto struct {
 	PlatformId string `json:"platformId"`
 	Timestamp  int64  `json:"timestamp"` // Epoch milliseconds
 	Region     string `json:"region"`
-	GameId     int64  `json:"gameId"`
+	GameId     int    `json:"gameId"`
 	Queue      int    `json:"queue"`
 	Role       string `json:"role"`
 	Season     int    `json:"season"`

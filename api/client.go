@@ -84,9 +84,9 @@ func (c *Client) get(basePath, relPath, platformId string, decoded interface{}) 
 			Message: err.Error(),
 		}
 	}
-
+	
 	defer resp.Body.Close()
-
+	
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNotModified {
 		errBody := new(bytes.Buffer)
 		resp.Write(errBody)

@@ -2,6 +2,7 @@ package matchers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -42,6 +43,14 @@ func (a *Api) GetMatchesBySummonerId(c *gin.Context) {
 		c.JSON(errorResponse.StatusCode, err)
 		return
 	}
+	for _, v := range matches.Matches {
+
+		matchDetail, err := a.client.Matches.MatchDetailsByGameId(v.GameId, "EUW1")
+		if err != nil {
+			return
+		}
+		fmt.Println(matchDetail)
+	}
 	c.JSON(http.StatusOK, matches)
 
 }
@@ -51,16 +60,25 @@ func (a *Api) GetMatchDetailsByGameId(c *gin.Context) {
 	gameId := c.Param("id")
 	gameIdInt, _ := strconv.Atoi(gameId)
 
-	matchDetail, err := a.client.Matches.MatchDetailsByGameId(gameIdInt, "EUW1")
-	fmt.Println("this method gets called, GetMatchDetails")
-	if err != nil {
-		c.JSON(err.StatusCode, err)
-		return
-	}
-	/*
-		if err := a.sender.Send(c.Request.Context(), matchDetail); err != nil {
+	matchDetail := a.sender.Get(c.Request.Context(), gameIdInt)
+	if matchDetail == nil {
+		log.Println("No data in cache, fetching from 3rd party api")
+		matchDetail, err := a.client.Matches.MatchDetailsByGameId(gameIdInt, "EUW1")
+
+		match := &api.Match{MatchDTO: matchDetail}
+
+		if err != nil {
+			c.JSON(err.StatusCode, err)
+			return
+		}
+		log.Println("Sending data to cache")
+		if err := a.sender.Send(c.Request.Context(), match); err != nil {
 			c.JSON(http.StatusInternalServerError, err)
 		}
-	*/
-	c.JSON(http.StatusOK, matchDetail)
+		c.JSON(http.StatusOK, match)
+
+	} else {
+		log.Println("Data exists in the cache, returning data from cache")
+		c.JSON(http.StatusOK, matchDetail.MatchDTO)
+	}
 }

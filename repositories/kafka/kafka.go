@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/vsivarajah/RiotStatistics/api"
 	"github.com/vsivarajah/RiotStatistics/pkg/config"
-	"github.com/vsivarajah/RiotStatistics/producer"
+	repo "github.com/vsivarajah/RiotStatistics/repositories"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
@@ -13,7 +15,7 @@ type kafkaService struct {
 	prod *kafka.Producer
 }
 
-func New(conf *config.Config) (producer.Sender, error) {
+func New(conf *config.Config) (repo.DbRepository, error) {
 
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": conf.Kafka.BootstrapServers,
@@ -26,12 +28,12 @@ func New(conf *config.Config) (producer.Sender, error) {
 	return &kafkaService{prod: p}, nil
 }
 
-func (k *kafkaService) Send(ctx context.Context, message interface{}) error {
+func (k *kafkaService) Send(ctx context.Context, match *api.Match) error {
 	// publish sync
-	message_2, _ := json.Marshal(message)
+	message_2, _ := json.Marshal(match.MatchDTO)
 
 	deliveryChan := make(chan kafka.Event)
-	topic := "matchDetails"
+	topic := "matchdetails"
 	err := k.prod.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
 		Value:          []byte(message_2),
@@ -51,25 +53,8 @@ func (k *kafkaService) Send(ctx context.Context, message interface{}) error {
 
 	close(deliveryChan)
 	return nil
+}
 
-	/*
-
-		message_2, _ := json.Marshal(message)
-		msg := &sarama.ProducerMessage{
-			Topic: "vignesh",
-
-			Value: sarama.ByteEncoder(message_2),
-		}
-		p, o, err := k.prod.Produce()
-		if err != nil {
-			return err
-		}
-
-		// publish async
-		//producer.Input() <- &sarama.ProducerMessage{
-
-		fmt.Println("Partition: ", p)
-		fmt.Println("Offset: ", o)
-		return nil
-	*/
+func (k *kafkaService) Get(ctx context.Context, key int) *api.Match {
+	return nil
 }
