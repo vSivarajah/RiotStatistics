@@ -8,7 +8,7 @@ import (
 
 	"github.com/vsivarajah/RiotStatistics/api"
 	"github.com/vsivarajah/RiotStatistics/pkg/config"
-	"github.com/vsivarajah/RiotStatistics/producer"
+	repo "github.com/vsivarajah/RiotStatistics/repositories"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -19,7 +19,7 @@ type dbService struct {
 	Collection *mongo.Collection
 }
 
-func NewMongoDB(conf *config.Config) (producer.Sender, error) {
+func NewMongoDB(conf *config.Config) (repo.DbRepository, error) {
 
 	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

@@ -11,13 +11,14 @@ import (
 	"github.com/go-redis/redis/v7"
 	"github.com/vsivarajah/RiotStatistics/api"
 	"github.com/vsivarajah/RiotStatistics/pkg/config"
+	repo "github.com/vsivarajah/RiotStatistics/repositories"
 )
 
 type redisService struct {
 	Client *redis.Client
 }
 
-func NewRedisCache(conf *config.Config) (repositories.DbRepository, error) {
+func NewRedisCache(conf *config.Config) (repo.DbRepository, error) {
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",

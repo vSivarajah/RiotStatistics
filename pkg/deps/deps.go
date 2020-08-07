@@ -5,12 +5,13 @@ import (
 
 	"github.com/vsivarajah/RiotStatistics/api"
 	"github.com/vsivarajah/RiotStatistics/pkg/config"
+	repo "github.com/vsivarajah/RiotStatistics/repositories"
 	db "github.com/vsivarajah/RiotStatistics/repositories/db"
 )
 
 type Dependencies struct {
-	Client *api.Client
-	Sender producer.Sender
+	Client       *api.Client
+	DbRepository repo.DbRepository
 }
 
 func New() (*Dependencies, string, error) {
@@ -35,14 +36,14 @@ func New() (*Dependencies, string, error) {
 		}
 	*/
 
-	sender, err := db.NewRedisCache(c)
+	dbRepository, err := db.NewRedisCache(c)
 	if err != nil {
 		return nil, "error setting sender", err
 	}
 
 	return &Dependencies{
-		Client: client,
-		Sender: sender,
+		Client:       client,
+		DbRepository: dbRepository,
 	}, "", nil
 
 }

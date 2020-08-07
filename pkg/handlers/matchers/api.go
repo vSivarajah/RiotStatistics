@@ -11,16 +11,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/vsivarajah/RiotStatistics/api"
-	"github.com/vsivarajah/RiotStatistics/producer"
+	repo "github.com/vsivarajah/RiotStatistics/repositories"
 )
 
 type Api struct {
-	client *api.Client
-	sender producer.Sender
+	client       *api.Client
+	dbRepository repo.DbRepository
 }
 
 func New(d *deps.Dependencies) Api {
-	return Api{client: d.Client, sender: d.Sender}
+	return Api{client: d.Client, dbRepository: d.DbRepository}
 }
 
 func (a *Api) GetMatchesBySummonerId(c *gin.Context) {
@@ -60,7 +60,7 @@ func (a *Api) GetMatchDetailsByGameId(c *gin.Context) {
 	gameId := c.Param("id")
 	gameIdInt, _ := strconv.Atoi(gameId)
 
-	matchDetail := a.sender.Get(c.Request.Context(), gameIdInt)
+	matchDetail := a.dbRepository.Get(c.Request.Context(), gameIdInt)
 	if matchDetail == nil {
 		log.Println("No data in cache, fetching from 3rd party api")
 		matchDetail, err := a.client.Matches.MatchDetailsByGameId(gameIdInt, "EUW1")
@@ -72,7 +72,7 @@ func (a *Api) GetMatchDetailsByGameId(c *gin.Context) {
 			return
 		}
 		log.Println("Sending data to cache")
-		if err := a.sender.Send(c.Request.Context(), match); err != nil {
+		if err := a.dbRepository.Send(c.Request.Context(), match); err != nil {
 			c.JSON(http.StatusInternalServerError, err)
 		}
 		c.JSON(http.StatusOK, match)

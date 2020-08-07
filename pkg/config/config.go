@@ -26,10 +26,11 @@ func New() (*Config, string, error) {
 	if missingField, err := c.setupRiot(); err != nil {
 		return nil, missingField, err
 	}
-
-	if missingField, err := c.setupKafka(); err != nil {
-		return nil, missingField, err
-	}
+	/*
+		if missingField, err := c.setupKafka(); err != nil {
+			return nil, missingField, err
+		}
+	*/
 
 	// db config if required
 	return c, "", nil
