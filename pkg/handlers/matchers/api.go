@@ -60,7 +60,7 @@ func (a *Api) GetMatchDetailsByGameId(c *gin.Context) {
 	gameId := c.Param("id")
 	gameIdInt, _ := strconv.Atoi(gameId)
 
-	matchDetail := a.dbRepository.Get(c.Request.Context(), gameIdInt)
+	matchDetail := a.dbRepository.RedisRepository.Get(c.Request.Context(), gameIdInt)
 	if matchDetail == nil {
 		log.Println("No data in cache, fetching from 3rd party api")
 		matchDetail, err := a.client.Matches.MatchDetailsByGameId(gameIdInt, "EUW1")
@@ -72,8 +72,11 @@ func (a *Api) GetMatchDetailsByGameId(c *gin.Context) {
 			return
 		}
 		log.Println("Sending data to cache")
-		if err := a.dbRepository.Send(c.Request.Context(), match); err != nil {
+		if err := a.dbRepository.RedisRepository.Send(c.Request.Context(), match); err != nil {
 			c.JSON(http.StatusInternalServerError, err)
+		}
+		if err := a.dbRepository.MongoRepository.Send(c.Request.Context(), match); err != nil {
+			fmt.Println("Sent to mongodb")
 		}
 		c.JSON(http.StatusOK, match)
 

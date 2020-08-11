@@ -1,12 +1,10 @@
 package producer
 
 import (
-	"context"
-
-	"github.com/vsivarajah/RiotStatistics/api"
+	"github.com/vsivarajah/RiotStatistics/repositories/db"
 )
 
-type DbRepository interface {
-	Send(ctx context.Context, match *api.Match) error
-	Get(ctx context.Context, key int) *api.Match
+type DbRepository struct {
+	db.MongoRepository
+	db.RedisRepository
 }

@@ -35,8 +35,13 @@ func New() (*Dependencies, string, error) {
 			return nil, "error setting sender", err
 		}
 	*/
+	dbRepository := repo.DbRepository{}
+	dbRepository.RedisRepository, err = db.NewRedisCache(c)
+	if err != nil {
+		return nil, "error setting sender", err
+	}
 
-	dbRepository, err := db.NewRedisCache(c)
+	dbRepository.MongoRepository, err = db.NewMongoDB(c)
 	if err != nil {
 		return nil, "error setting sender", err
 	}
